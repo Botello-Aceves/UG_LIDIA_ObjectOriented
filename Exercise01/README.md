@@ -1,131 +1,115 @@
-# Function Pointers with Insertion Sort (C)
+# Configurable Accumulator in C using Function Pointers
 
-This repository demonstrates how **function pointers** allow an algorithm to be completely independent from the comparison criteria.
+This project demonstrates how to simulate **object-oriented behavior in pure C** by combining:
 
-The same **Insertion Sort** implementation can sort data using different rules **without modifying a single line of the algorithm**.
+- Structures
+- Function pointers
+- Internal state manipulation
 
-This is a powerful educational example to understand:
-
-- Function pointers in C
-- Inversion of control
-- Decoupling logic from behavior
-- The foundation of the Strategy Pattern (in pure C)
+The example implements a **configurable accumulator** whose behavior changes dynamically depending on the function assigned to it.
 
 ---
 
-## 🎯 Key Concept
+## 🎯 Objective
 
-> The algorithm does not know what "less than" means.  
-> It delegates that decision to a function pointer.
+Show that in C:
 
-Insertion sort here is not a sorting algorithm.
+> A function can receive a pointer to the same structure that contains it, allowing the function to access and modify the internal members of the structure — behaving like a *method*.
 
-It is a **reordering engine**.
+This is the conceptual foundation of:
 
-The actual sorting logic lives in the comparator functions.
-
----
-
-## 📁 Project Structure
-
-├── build.sh
-├── run.sh
-├── build.bat
-├── run.bat
-├── main.c
-├── insert_sort.c
-├── insert_sort.h
-├── comparators.h
-└── README.md
-
+- Strategy Pattern
+- Object-Oriented design in C
+- How many real C libraries are implemented internally
 
 ---
 
-## ⚙️ How It Works
+## 🧠 Concept
 
-The insertion sort receives a function pointer:
+The structure contains:
 
-    typedef int (*CompareFn)(int a, int b);
+- Internal data (`value`, `factor`)
+- A function pointer (`op`)
 
-And uses it like this:
+Different functions can be assigned to `op`, and each one uses the internal members of the structure to perform a different operation.
 
-    while (j >= 0 && compare(key, arr[j]))
-
-The algorithm does not know the comparison rule.
-
-We can change the sorting behavior by simply passing a different function.
+So the **behavior of the object is not fixed** — it is defined dynamically.
 
 ---
 
-## 🧪 What Is Demonstrated
+## 🏗 Structure Definition
 
-The same array is sorted using:
+```c
+struct Accumulator;
 
-- Ascending order
+typedef int (*Operation)(struct Accumulator*, int);
 
-- Descending order
-
-- Absolute value
-
-- Even numbers first
-
-Without changing the insertion sort implementation.
-
----
-
-## 🐧 Linux / macOS (bash)
-Build
-./build.sh
-
-Run
-./run.sh
+typedef struct Accumulator {
+    int value;
+    int factor;
+    Operation op;
+} Accumulator;
 
 ---
 
-## 🪟 Windows (MinGW)
+## ⚙️ Available Operations
 
-This project can be compiled on Windows using MinGW.
+add → adds a value
 
-1) Verify MinGW installation
+multiply_with_factor → multiplies input by the internal factor
 
-Make sure gcc is available from the command line:
+subtract → subtracts a value
 
-    gcc --version
-
-2) Build
-
-Double click:
-
-    build.bat
-
-
-or from CMD:
-
-    build.bat
-
-3) Run
-    run.bat
+Each function receives a pointer to the structure and uses its internal data.
 
 ---
 
-## 💡 Educational Takeaway
+## ▶️ How It Works
+int execute(Accumulator* acc, int x) {
+    return acc->op(acc, x);
+}
 
-Notice:
 
-- The algorithm never changes
-- Only the comparator changes
-- The code is portable across Linux, macOS, and Windows
-- This is the conceptual foundation of how std::sort works in C++
-
----
-
-## ▶️ Expected Output
-
-You will see the same data ordered in different ways depending on the comparator function used.
+The operation executed depends on the function assigned to op.
 
 ---
 
-## 🧠 Final Message
+## 🧪 Example Usage
+Accumulator acc1 = { .value = 0, .factor = 2, .op = add };
+Accumulator acc2 = { .value = 0, .factor = 3, .op = multiply_with_factor };
+Accumulator acc3 = { .value = 100, .factor = 1, .op = subtract };
 
-Insertion sort is not a sorting algorithm.
-It is a reordering engine driven by a function pointer.
+printf("acc1: %d\n", execute(&acc1, 10));
+printf("acc2: %d\n", execute(&acc2, 10));
+printf("acc3: %d\n", execute(&acc3, 10));
+
+Expected Output
+acc1: 10
+acc2: 30
+acc3: 90
+
+---
+
+## 🧩 Why This Matters
+
+This exact pattern is used in:
+
+FILE implementation in stdio
+
+Linux kernel drivers
+
+Graphics libraries
+
+Simulation engines
+
+Plugin systems
+
+Understanding this example helps students bridge:
+
+Function pointers → modular design → object-oriented concepts in C
+
+---
+
+## 🛠 Compile and Run
+gcc main.c -o accumulator
+./accumulator
