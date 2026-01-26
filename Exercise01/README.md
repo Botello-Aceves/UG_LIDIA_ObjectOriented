@@ -49,6 +49,7 @@ typedef struct Accumulator {
     int factor;
     Operation op;
 } Accumulator;
+```
 
 ---
 
@@ -65,16 +66,20 @@ Each function receives a pointer to the structure and uses its internal data.
 ---
 
 ## ▶️ How It Works
+
+```c
 int execute(Accumulator* acc, int x) {
     return acc->op(acc, x);
 }
-
+```
 
 The operation executed depends on the function assigned to op.
 
 ---
 
 ## 🧪 Example Usage
+
+```c
 Accumulator acc1 = { .value = 0, .factor = 2, .op = add };
 Accumulator acc2 = { .value = 0, .factor = 3, .op = multiply_with_factor };
 Accumulator acc3 = { .value = 100, .factor = 1, .op = subtract };
@@ -87,6 +92,7 @@ Expected Output
 acc1: 10
 acc2: 30
 acc3: 90
+```
 
 ---
 
@@ -111,5 +117,7 @@ Function pointers → modular design → object-oriented concepts in C
 ---
 
 ## 🛠 Compile and Run
+```bash
 gcc main.c -o accumulator
 ./accumulator
+```
