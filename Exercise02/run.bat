@@ -1,0 +1,3 @@
+@echo off
+echo Running program...
+matrix.exe
